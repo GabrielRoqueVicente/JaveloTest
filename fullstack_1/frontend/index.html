@@ -30,36 +30,29 @@
 
         constructor(props) {
             super(props);
-            App.diffDays = App.diffDays.bind(this);
             this.state = {
                 "objectives" : OBJECTIVES
             }
-        }
-
-        static diffDays(d1, d2){
-            d1 = new Date(d1);
-            d2 = new Date(d2);
-            let oneDay = 24*60*60*1000;
-            return  Math.round(Math.abs(d2.getTime() - d1.getTime())/(oneDay));
         }
 
         render () {
             let objectivesList = this.state.objectives.map(function (objective) {
                 let startDate =  objective.start_date;
                 let endDate = objective.end_date;
-                let totalDays = App.diffDays(startDate, endDate);
-                let daysFromStart= App.diffDays(startDate, TODAY);
                 let data = [];
 
                 data[objective.id] =[
                     {"name":"Current Progress", "data": {startDate: objective.start, TODAY: objective.current , endDate: 100}}
                 ];
 
+                let child ='';
+
+
                 return (
                     <div id= {"item" + objective.id }>
                       <span>{ objective.title }</span>
                       <div>
-                          <ReactChartkick.LineChart data={data[objective.id]} width="200px" height="100px"/>
+                          <ReactChartkick.LineChart data={data[objective.id]} width="300px" height="100px"/>
                       </div>
                         <br/>
                     </div>
