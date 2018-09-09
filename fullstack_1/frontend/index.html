@@ -26,6 +26,7 @@
     ];
     const TODAY = "2018-02-20";
 
+
     class App extends React.Component {
 
         constructor(props) {
@@ -40,16 +41,14 @@
                 let startDate =  objective.start_date;
                 let endDate = objective.end_date;
                 let data = [];
+                let parent
 
                 data[objective.id] =[
                     {"name":"Current Progress", "data": {startDate: objective.start, TODAY: objective.current , endDate: 100}}
                 ];
 
-                let child ='';
-
-
                 return (
-                    <div id= {"item" + objective.id }>
+                    <div id= {"item" + objective.id } parent={objective.parent_id}>
                       <span>{ objective.title }</span>
                       <div>
                           <ReactChartkick.LineChart data={data[objective.id]} width="300px" height="100px"/>
@@ -58,6 +57,28 @@
                     </div>
                 )
             });
+
+
+            let orderedList = [];
+            function order(){
+                objectivesList.map(function (objective){
+                    if(!objective.props.parent){
+                        orderedList[objective.props.id]= objective;
+                        order()
+                    }
+
+                    if(objective.props.parent){
+                        function findParent(orderedList){
+                            console.log(orderedList);
+                            return orderedList
+                        }
+                    }
+                });
+            }
+
+
+            console.log(objectivesList);
+
 
             return (
                 <div>

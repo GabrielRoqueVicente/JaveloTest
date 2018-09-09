@@ -24,12 +24,8 @@ progressRecords.each do |record|
 		end		
 	end
 end
-
 newProgressRecords = {progress_records: newProgressRecords}
-JSON.pretty_generate(newProgressRecords)
 
 File.open("output.json","w") do |f|
   f.write(newProgressRecords.to_json)
 end
-
-pp newProgressRecords
