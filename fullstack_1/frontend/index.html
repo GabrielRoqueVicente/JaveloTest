@@ -12,6 +12,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.0/redux.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.7/react-redux.js"></script>
 
+  <script src="https://unpkg.com/chart.js@2.7.2/dist/Chart.bundle.js"></script>
+  <script src="https://unpkg.com/react-chartkick@0.3.0"></script>
+
+
   <script type="text/babel">
     const OBJECTIVES = [
       { "id": 1, "title": "First objective", "start": 0, "target": 50, "current": 20, "start_date": "2018-01-05", "end_date": "2018-03-05" },
@@ -22,13 +26,55 @@
     ];
     const TODAY = "2018-02-20";
 
+    class App extends React.Component {
 
-    // PUT YOUR CODE HERE AND MODIFY App
+        constructor(props) {
+            super(props);
+            App.diffDays = App.diffDays.bind(this);
+            this.state = {
+                "objectives" : OBJECTIVES
+            }
+        }
 
-    const App = () =>
-      <div>CHALLENGE JAVELO</div>
+        static diffDays(d1, d2){
+            d1 = new Date(d1);
+            d2 = new Date(d2);
+            let oneDay = 24*60*60*1000;
+            return  Math.round(Math.abs(d2.getTime() - d1.getTime())/(oneDay));
+        }
 
+        render () {
+            let objectivesList = this.state.objectives.map(function (objective) {
+                let startDate =  objective.start_date;
+                let endDate = objective.end_date;
+                let totalDays = App.diffDays(startDate, endDate);
+                let daysFromStart= App.diffDays(startDate, TODAY);
+                let data = [];
 
+                data[objective.id] =[
+                    {"name":"Current Progress", "data": {startDate: objective.start, TODAY: objective.current , endDate: 100}}
+                ];
+
+                return (
+                    <div id= {"item" + objective.id }>
+                      <span>{ objective.title }</span>
+                      <div>
+                          <ReactChartkick.LineChart data={data[objective.id]} width="200px" height="100px"/>
+                      </div>
+                        <br/>
+                    </div>
+                )
+            });
+
+            return (
+                <div>
+                  <div>{this.state.objectives.length} objectives have their current value over their target</div>
+                  <br/>
+                  { objectivesList }
+                </div>
+                )
+        }
+    }
     ReactDOM.render(
       <App/>,
       document.getElementById('root')
